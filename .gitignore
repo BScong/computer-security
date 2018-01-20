@@ -1,3 +1,8 @@
+# Make files
+login_linux
+makepass
+mylogin
+
 # Prerequisites
 *.d
 

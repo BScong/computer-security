@@ -67,14 +67,27 @@ int main(int argc, char *argv[]) {
 			/* You have to encrypt user_pass for this to work */
 			/* Don't forget to include the salt */
 
-			if (!strcmp(user_pass, passwddata->passwd)) {
+			if (!strcmp(crypt(user_pass,passwddata->passwd_salt), passwddata->passwd)) {
 
 				printf(" You're in !\n");
+				printf("Number of failures before : %d \n", passwddata->pwfailed);
+				passwddata->pwfailed=0;
+				passwddata->pwage++;	
+				if(passwddata->pwage>10){
+					printf("Age over 10, you should change pw\n");
+				}
 
+				mysetpwent(user,passwddata);
 				/*  check UID, see setuid(2) */
 				/*  start a shell, use execve(2) */
 
 			}
+			else {
+				printf("Login Incorrect \n");
+				passwddata->pwfailed++;
+				mysetpwent(user,passwddata);
+			}
+
 		} else {
 			printf("Login Incorrect \n");
 		}

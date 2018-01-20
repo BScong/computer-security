@@ -12,7 +12,7 @@
 #include <sys/types.h>
 #include <crypt.h>
 /* Uncomment next line in step 2 */
-/* #include "pwent.h" */
+#include "pwent.h" 
 
 #define TRUE 1
 #define FALSE 0
@@ -26,7 +26,7 @@ void sighandler() {
 
 int main(int argc, char *argv[]) {
 
-	struct passwd *passwddata; /* this has to be redefined in step 2 */
+	mypwent *passwddata; /* this has to be redefined in step 2 */
 	/* see pwent.h */
 
 	char important[LENGTH] = "***IMPORTANT***";
@@ -55,13 +55,13 @@ int main(int argc, char *argv[]) {
 				LENGTH - 1, LENGTH - 1, important);
 
 		user_pass = getpass(prompt);
-		passwddata = getpwnam(user);
+		passwddata = mygetpwnam(user);
 
 		if (passwddata != NULL) {
 			/* You have to encrypt user_pass for this to work */
 			/* Don't forget to include the salt */
 
-			if (!strcmp(user_pass, passwddata->pw_passwd)) {
+			if (!strcmp(user_pass, passwddata->passwd)) {
 
 				printf(" You're in !\n");
 
@@ -69,8 +69,9 @@ int main(int argc, char *argv[]) {
 				/*  start a shell, use execve(2) */
 
 			}
+		} else {
+			printf("Login Incorrect \n");
 		}
-		printf("Login Incorrect \n");
 	}
 	return 0;
 }

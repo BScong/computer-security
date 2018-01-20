@@ -19,6 +19,7 @@
 #define LENGTH 16
 
 void sighandler() {
+	printf("Signal handler - FORBIDDEN\n");
 
 	/* add signalhandling routines here */
 	/* see 'man 2 signal' */
@@ -26,8 +27,7 @@ void sighandler() {
 
 int main(int argc, char *argv[]) {
 
-	mypwent *passwddata; /* this has to be redefined in step 2 */
-	/* see pwent.h */
+	mypwent *passwddata; 
 
 	char important[LENGTH] = "***IMPORTANT***";
 
@@ -36,7 +36,9 @@ int main(int argc, char *argv[]) {
 	char prompt[] = "password: ";
 	char *user_pass;
 
-	sighandler();
+	signal(SIGINT,sighandler);
+	signal(SIGTSTP,sighandler);
+	signal(SIGQUIT,sighandler);
 
 	while (TRUE) {
 		/* check what important variable contains - do not remove, part of buffer overflow test */

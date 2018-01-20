@@ -86,6 +86,20 @@ int main(int argc, char *argv[]) {
 				printf("Login Incorrect \n");
 				passwddata->pwfailed++;
 				mysetpwent(user,passwddata);
+				if (passwddata->pwfailed>5){
+					int a = rand() % 10;
+					int b = rand() % 10;
+					int result = a+b;
+					printf("Barrier, you need to solve : %d + %d \n",a,b);
+					int proposition;
+					scanf("%d", &proposition);
+					if (proposition==result){
+						printf("ok, good result ! \n");
+					} else {
+						printf("Wrong, exiting program...\n");
+						exit(0);
+					}
+				}
 			}
 
 		} else {

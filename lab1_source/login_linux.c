@@ -36,9 +36,9 @@ int main(int argc, char *argv[]) {
 	char prompt[] = "password: ";
 	char *user_pass;
 
-	signal(SIGINT,sighandler);
-	signal(SIGTSTP,sighandler);
-	signal(SIGQUIT,sighandler);
+	signal(SIGINT,sighandler); // Ctrl-C
+	signal(SIGTSTP,sighandler); // Ctrl-Z
+	signal(SIGQUIT,sighandler); // Ctrl-\
 
 	while (TRUE) {
 		/* check what important variable contains - do not remove, part of buffer overflow test */

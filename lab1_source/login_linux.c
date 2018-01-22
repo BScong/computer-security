@@ -19,9 +19,7 @@
 #define LENGTH 16
 
 void sighandler() {
-	printf("Signal handler - FORBIDDEN\n");
-
-	/* add signalhandling routines here */
+	printf("Signal handler - Command FORBIDDEN\n");
 	/* see 'man 2 signal' */
 }
 
@@ -46,11 +44,13 @@ int main(int argc, char *argv[]) {
 				important);
 
 		printf("login: ");
-		fflush(NULL); /* Flush all  output buffers */
+		fflush(NULL); /* Flush all output buffers */
 		__fpurge(stdin); /* Purge any data in stdin buffer */
 
 		if (fgets(user,LENGTH,stdin) == NULL) /* gets() is vulnerable to buffer */
 			exit(0); /*  overflow attacks.  */
+
+		// Replace \n by \0 in user input
 		int i =0;
 		for(i=0;i<LENGTH;i++){
 			if(user[i]=='\n'){
@@ -69,17 +69,20 @@ int main(int argc, char *argv[]) {
 			/* You have to encrypt user_pass for this to work */
 			/* Don't forget to include the salt */
 
+			// we crypt the user password with the salt and compare it with the stored one
 			if (!strcmp(crypt(user_pass,passwddata->passwd_salt), passwddata->passwd)) {
 
 				printf(" You're in !\n");
 				printf("Number of failures before : %d \n", passwddata->pwfailed);
 				passwddata->pwfailed=0;
-				passwddata->pwage++;	
+				passwddata->pwage++;
+
 				if(passwddata->pwage>10){
-					printf("Age over 10, you should change pw\n");
+					printf("Age over 10, you should change the password\n");
 				}
 
-				mysetpwent(user,passwddata);
+				mysetpwent(user,passwddata); // Update the database
+
 				/*  check UID, see setuid(2) */
 				setuid(passwddata->uid);
 				/*  start a shell, use execve(2) */
@@ -89,7 +92,10 @@ int main(int argc, char *argv[]) {
 			else {
 				printf("Login Incorrect \n");
 				passwddata->pwfailed++;
-				mysetpwent(user,passwddata);
+				mysetpwent(user,passwddata); // Update the database
+
+				// System against Bruteforce
+				// We generate two random numbers and ask for the sum
 				if (passwddata->pwfailed>5){
 					int a = rand() % 10;
 					int b = rand() % 10;

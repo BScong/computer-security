@@ -84,9 +84,15 @@ int main(int argc, char *argv[]) {
 				mysetpwent(user,passwddata); // Update the database
 
 				/*  check UID, see setuid(2) */
-				setuid(passwddata->uid);
+				if(setuid(passwddata->uid)==0){
+					execve("/bin/sh",NULL,NULL);
+				} else {
+					// raise error
+					printf("Error during setuid\n");
+					exit(0);
+				}
 				/*  start a shell, use execve(2) */
-				execve("/bin/sh",NULL,NULL);
+				
 
 			}
 			else {
